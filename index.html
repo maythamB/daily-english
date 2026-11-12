@@ -170,13 +170,10 @@ textarea{width:100%;min-height:80px;border-radius:14px;border:2px solid #0000001
 <div id="app"></div>
 <script>
 /* =========================================================
-   إعداد الأبناء (يمكن تعديلها أيضًا من لوحة ولي الأمر #parent)
-   gender: 'm' ذكر ، 'f' أنثى
+   الأبناء يُضافون من لوحة ولي الأمر (#parent) ويُحفظون على جهازه.
+   لا تكتب أسماء هنا: الصفحة منشورة علنًا.
    ========================================================= */
-const CHILDREN = [
-  { id: 'child1', name: '', gender: 'm', level: '' },
-  { id: 'child2', name: '', gender: 'f', level: '' },
-];
+const CHILDREN = [];
 
 /* خطة الدروس */
 const PLAN = [
@@ -884,12 +881,12 @@ function baseUrl() { return store.get('baseUrl', '') || location.href.split('#')
 function childLink(p) { return `${baseUrl()}#${p.id}${p.name ? '&n=' + encodeURIComponent(p.name) : ''}&g=${p.gender}`; }
 let ptab = null;
 function dashboard() {
-  const profs = getProfiles(), ids = Object.keys(profs);
-  if (!ptab || (!profs[ptab] && ptab !== 'settings')) ptab = ids[0];
+  const profs = getProfiles(), ids = Object.keys(profs).sort((a, b) => (+a.replace(/\D/g, '') || 0) - (+b.replace(/\D/g, '') || 0));
+  if (!ptab || (!profs[ptab] && ptab !== 'settings' && ptab !== '+')) ptab = ids[0] || '+';
   const all = store.get('results', []);
   app.innerHTML = `<div class="top"><h2 style="margin:0;flex:1">👨‍👩‍👧 لوحة ولي الأمر</h2><button class="x" id="lo" title="خروج">🔒</button></div>
     <div class="sec"><h3>📥 لصق شفرة نتيجة</h3><textarea id="codes" placeholder="EL-..."></textarea><button class="sbtn" id="addc" style="margin-top:8px">إضافة النتائج</button></div>
-    <div class="ptabs">${ids.map(id => `<button class="ptab ${ptab === id ? 'on' : ''}" data-t="${id}">${profs[id].gender === 'f' ? '👧' : '👦'} ${esc(profs[id].name || id)}</button>`).join('')}<button class="ptab" data-t="+">➕</button><button class="ptab ${ptab === 'settings' ? 'on' : ''}" data-t="settings">⚙️ إعدادات</button></div>
+    <div class="ptabs">${ids.map(id => `<button class="ptab ${ptab === id ? 'on' : ''}" data-t="${id}">${profs[id].gender === 'f' ? '👧' : '👦'} ${esc(profs[id].name || id)}</button>`).join('')}<button class="ptab ${ptab === '+' ? 'on' : ''}" data-t="+">➕ إضافة ابن</button><button class="ptab ${ptab === 'settings' ? 'on' : ''}" data-t="settings">⚙️ إعدادات</button></div>
     <div id="pbody"></div>`;
   $('#lo').onclick = () => { sessionStorage.removeItem('el_parent_ok'); parentView(); };
   $('#addc').onclick = async () => {
@@ -901,12 +898,10 @@ function dashboard() {
     ptab = ok[0].c;
     toast(`أُضيفت ${addResults(ok)} نتيجة ✅`); dashboard();
   };
-  $$('.ptab').forEach(b => b.onclick = () => {
-    if (b.dataset.t === '+') { const p = store.get('profiles', {}); let k = ids.length + 1; while (profs['child' + k]) k++; p['child' + k] = { name: '', gender: 'm' }; store.set('profiles', p); ptab = 'child' + k; }
-    else ptab = b.dataset.t; dashboard();
-  });
+  $$('.ptab').forEach(b => b.onclick = () => { ptab = b.dataset.t; dashboard(); });
   const pb = $('#pbody');
   if (ptab === 'settings') return settingsTab(pb, all);
+  if (ptab === '+') return addChildTab(pb, all, ids.length);
   const p = profs[ptab], rs = all.filter(x => x.c === p.id).sort((a, b) => a.d < b.d ? 1 : -1);
   const doneSet = new Set(rs.map(x => x.l));
   const mist = {}; rs.forEach(r => Object.entries(r.m || {}).forEach(([k, v]) => mist[k] = (mist[k] || 0) + v));
@@ -918,7 +913,7 @@ function dashboard() {
       <div class="row"><input class="inp" id="pn" placeholder="الاسم" value="${esc(p.name || '')}" style="font-size:18px;padding:10px">
       <select id="pg" class="inp" style="font-size:18px;padding:10px;flex:.6"><option value="m" ${p.gender !== 'f' ? 'selected' : ''}>ذكر</option><option value="f" ${p.gender === 'f' ? 'selected' : ''}>أنثى</option></select></div>
       <input class="inp" id="pl" placeholder="العمر/المرحلة والمستوى (ملاحظة لك)" value="${esc(p.level || '')}" style="font-size:16px;padding:10px;margin-top:8px">
-      <button class="sbtn" id="ps" style="margin-top:8px">حفظ</button></div>
+      <div class="row" style="margin-top:8px"><button class="sbtn" id="ps">حفظ</button><span></span><button class="sbtn ghost" id="pdel" style="color:var(--bad)">🗑️ حذف</button></div></div>
     <div class="sec"><h3>🔗 رابط ${esc(p.name || p.id)}</h3><div class="code">${esc(childLink(p))}</div><div class="row"><button class="sbtn" id="cl">📋 نسخ الرابط</button><a class="sbtn" style="text-decoration:none;text-align:center;background:#25d366" target="_blank" href="https://wa.me/?text=${encodeURIComponent(T('درس الإنجليزي اليوم 🦉\n') + childLink(p))}">واتساب</a></div></div>
     <div class="stats"><div class="stat"><b>${doneSet.size}</b><span>دروس منجزة</span></div><div class="stat"><b>${avg}%</b><span>متوسط الدرجة</span></div><div class="stat"><b>${Math.round(tt / 60)}</b><span>دقيقة تعلّم</span></div></div>
     <div class="sec"><h3>🔁 الأخطاء المتكررة</h3>${topM.length ? `<div class="chips">${topM.map(([k, v]) => `<span class="chip">${esc(k)} ×${v}</span>`).join('')}</div>` : '<span class="muted">لا يوجد بعد</span>'}</div>
@@ -926,6 +921,31 @@ function dashboard() {
     <div class="sec"><h3>🗺️ خطة الدروس</h3><ol class="plan">${PLAN.map((t, i) => { const n = i + 1, avail = LESSONS.some(L => L.no === n); return `<li class="${doneSet.has(n) ? 'done' : avail ? 'avail' : ''}">${doneSet.has(n) ? '✅' : avail ? '🟣' : '⏳'} ${esc(t)}</li>`; }).join('')}</ol><div class="muted" style="font-size:14px">✅ منجز · 🟣 متاح · ⏳ قادم</div></div>`;
   $('#ps').onclick = () => { const s = store.get('profiles', {}); s[p.id] = { ...(s[p.id] || {}), name: $('#pn').value.trim(), gender: $('#pg').value, level: $('#pl').value.trim() }; store.set('profiles', s); toast('تم الحفظ ✅'); dashboard(); };
   $('#cl').onclick = () => copy(childLink(p));
+  $('#pdel').onclick = () => {
+    if (!confirm(`حذف ${p.name || p.id} من القائمة؟${rs.length ? `\nنتائجه (${rs.length}) تبقى محفوظة وتعود إذا لصقت شفرة جديدة له.` : ''}`)) return;
+    const s = store.get('profiles', {}); delete s[p.id]; store.set('profiles', s); ptab = null; toast('تم الحذف'); dashboard();
+  };
+}
+function addChildTab(pb, all, count) {
+  let g = null;
+  pb.innerHTML = `<div class="sec"><h3>➕ إضافة ابن ${count ? `(عندك ${count} حاليًا)` : ''}</h3>
+    ${count ? '' : '<p class="muted" style="margin:0 0 10px">ما أضفت أحدًا بعد. أضف أولادك واحدًا واحدًا، بالعدد الذي تريده.</p>'}
+    <input class="inp" id="an" maxlength="30" placeholder="الاسم الأول" style="font-size:18px;padding:12px">
+    <div class="gpick"><button class="opt" data-g="m">👦 ولد</button><button class="opt" data-g="f">👧 بنت</button></div>
+    <input class="inp" id="al" placeholder="العمر/المرحلة والمستوى (اختياري)" style="font-size:16px;padding:10px">
+    <button class="btn primary" id="ad" style="margin-top:12px" disabled>إضافة ✅</button></div>`;
+  const an = $('#an'), ad = $('#ad'), upd = () => ad.disabled = !(an.value.trim() && g);
+  an.oninput = upd;
+  $$('.gpick .opt', pb).forEach(b => b.onclick = () => { g = b.dataset.g; $$('.gpick .opt', pb).forEach(x => x.classList.toggle('on', x === b)); upd(); });
+  ad.onclick = () => {
+    const s = store.get('profiles', {});
+    // رقم جديد لم يُستخدم من قبل (حتى لا تختلط نتائج ابن محذوف بابن جديد)
+    const used = [...Object.keys(getProfiles()), ...all.map(r => r.c)].map(id => +String(id).replace(/\D/g, '') || 0);
+    const id = 'child' + (Math.max(0, ...used) + 1);
+    s[id] = { name: an.value.trim(), gender: g, level: $('#al').value.trim() };
+    store.set('profiles', s); ptab = id; toast('تمت الإضافة ✅'); dashboard();
+  };
+  setTimeout(() => an.focus(), 100);
 }
 function settingsTab(pb, all) {
   pb.innerHTML = `
