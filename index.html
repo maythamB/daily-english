@@ -1,0 +1,971 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff8ef">
+<title>إنجليزي كل يوم 🦉</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff8ef;--ink:#2b2340;--muted:#7a7090;--ok:#1fa774;--bad:#e5485a;--c:#6c5ce7}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{font-family:"Tajawal","Segoe UI",Tahoma,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(circle at 10% 0%,#ffe7cf 0,transparent 40%),radial-gradient(circle at 100% 100%,#e8e2ff 0,transparent 45%);background-attachment:fixed}
+.en{direction:ltr;unicode-bidi:isolate;font-family:"Nunito","Segoe UI",Arial,sans-serif}
+#app{max-width:560px;margin:0 auto;padding:12px 14px 30px;min-height:100vh;display:flex;flex-direction:column}
+button{font-family:inherit;color:inherit}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:50}
+/* top bar */
+.top{display:flex;align-items:center;gap:10px;margin:2px 0 12px}
+.x{border:0;background:#0000000f;border-radius:12px;width:42px;height:42px;font-size:18px;cursor:pointer;flex:none}
+.bar{flex:1;height:14px;background:#00000012;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--c);border-radius:99px;transition:width .4s}
+.pts{font-weight:800;background:#fff;padding:7px 12px;border-radius:99px;box-shadow:0 2px 0 #0000001a;flex:none;font-size:15px}
+.stephead{display:flex;gap:12px;align-items:center;background:var(--c);color:#fff;border-radius:20px;padding:12px 16px;box-shadow:0 4px 0 #00000026}
+.stephead .ico{font-size:30px;flex:none}
+.sttitle{font-weight:800;font-size:19px}
+.tip{font-size:14.5px;opacity:.95;margin-top:3px}
+.qbody{margin-top:16px;flex:1}
+/* cards */
+.card{background:#fff;border-radius:24px;padding:18px;box-shadow:0 4px 0 #0000000f,0 10px 30px #0000000a;text-align:center}
+.pic{font-size:88px;line-height:1.15}
+.pic.sm{font-size:56px;margin-top:6px}
+.word{font-size:40px;font-weight:900;margin-top:4px}
+.word.sm{font-size:30px}
+.word b{color:var(--c)}
+.ar{color:var(--muted);font-size:20px;margin-top:4px}
+.abc{font-size:96px;font-weight:900;color:var(--c);line-height:1}
+.abc span{font-size:72px;margin-inline-start:16px;opacity:.75}
+.say{border:0;background:var(--c);color:#fff;border-radius:50%;width:60px;height:60px;font-size:26px;cursor:pointer;box-shadow:0 4px 0 #00000026;margin-top:12px}
+.say:active{transform:translateY(2px);box-shadow:0 2px 0 #00000026}
+.say.big{width:116px;height:116px;font-size:50px;margin-top:6px}
+.center{text-align:center}
+.hint{color:var(--muted);margin-top:8px;font-size:16px}
+/* options */
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.opts.one{grid-template-columns:1fr}
+.opts.three{grid-template-columns:1fr 1fr 1fr}
+.opt{border:3px solid #00000010;background:#fff;border-radius:20px;padding:14px 8px;font-size:22px;font-weight:800;cursor:pointer;box-shadow:0 4px 0 #00000016;min-height:72px;transition:transform .1s}
+.opt:active{transform:translateY(2px)}
+.opts.pics .opt{font-size:56px;min-height:104px;padding:6px}
+.opts.letters .opt{font-size:38px}
+.opt small{font-size:.7em;opacity:.6;margin-inline-start:6px}
+.opt.right{border-color:var(--ok);background:#e6fbf2;animation:pop .35s}
+.opt.wrong{border-color:var(--bad);background:#ffeef0;animation:shake .4s;opacity:.55}
+.opt:disabled{cursor:default}
+.tf .opt{font-size:24px}
+@keyframes pop{50%{transform:scale(1.08)}}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+/* board */
+.board{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.col{display:flex;flex-direction:column;gap:10px}
+.tile{border:3px solid #00000010;background:#fff;border-radius:18px;min-height:66px;font-size:22px;font-weight:800;cursor:pointer;box-shadow:0 4px 0 #00000016}
+.tile.pic{font-size:40px;line-height:1}
+.tile.sel{border-color:var(--c);background:#f3f0ff;transform:scale(1.03)}
+.tile.done{border-color:var(--ok);background:#e6fbf2;opacity:.55}
+.tile.wrong{border-color:var(--bad);animation:shake .4s}
+/* spell & build */
+.slots{display:flex;justify-content:center;gap:8px;margin:14px 0 4px;direction:ltr;flex-wrap:wrap}
+.slot{width:50px;height:58px;border-radius:14px;border:3px dashed #00000025;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;background:#fff}
+.slot.filled{border-style:solid;border-color:var(--ok);color:var(--ok)}
+.slot.fixed{border-style:solid;border-color:#0000001a;color:var(--ink)}
+.tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:16px;direction:ltr}
+.ltile{min-width:58px;height:62px;border-radius:16px;border:0;background:var(--c);color:#fff;font-size:30px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #00000030;padding:0 12px}
+.ltile:disabled{opacity:.18;cursor:default}
+.ltile.wrong{background:var(--bad);animation:shake .4s}
+.line{min-height:76px;background:#fff;border-radius:18px;border:3px dashed #00000020;display:flex;flex-wrap:wrap;gap:8px;padding:10px;margin-top:14px;direction:ltr;align-items:center}
+.line.bad{border-color:var(--bad);animation:shake .4s}
+.wtile{border:0;border-radius:14px;padding:10px 14px;font-size:22px;font-weight:800;background:#fff;box-shadow:0 3px 0 #00000020,inset 0 0 0 2px #0000000f;cursor:pointer}
+.bank .wtile{background:var(--c);color:#fff}
+.wtile.hint{background:#fff3c4;box-shadow:inset 0 0 0 2px #f0b400}
+/* chat */
+.chat{display:flex;flex-direction:column;gap:10px}
+.msg{display:flex;gap:8px;align-items:flex-end}
+.msg .who{font-size:40px;line-height:1}
+.msg .b{background:#fff;border-radius:20px 20px 20px 6px;padding:12px 16px;box-shadow:0 3px 0 #00000012;max-width:80%}
+.msg.bot{direction:ltr}
+.msg.bot .b .ar{direction:rtl;text-align:right;font-size:16px}
+.msg.me{flex-direction:row-reverse;direction:ltr}
+.msg.me .b{background:var(--c);color:#fff;border-radius:20px 20px 6px 20px}
+.msg .b .en{font-size:24px;font-weight:800}
+/* owl */
+.owl{display:flex;align-items:flex-end;gap:8px;margin-top:16px;min-height:62px}
+.owl .face{font-size:48px;line-height:1;transition:transform .3s}
+.owl.happy .face{animation:hop .5s}
+.owl.sad .face{transform:rotate(-12deg)}
+@keyframes hop{40%{transform:translateY(-14px) rotate(8deg)}}
+.bubble{background:#fff;border-radius:18px 18px 18px 4px;padding:10px 14px;box-shadow:0 3px 0 #00000012;font-size:17px;font-weight:700;max-width:85%}
+.bubble:empty{display:none}
+/* footer */
+.foot{position:sticky;bottom:0;padding:12px 0 calc(8px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 25%)}
+.btn{display:block;width:100%;border:0;border-radius:18px;padding:16px;font-size:20px;font-weight:800;cursor:pointer;background:#ece7f7;box-shadow:0 4px 0 #00000022;text-decoration:none;text-align:center}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #00000022}
+.btn.primary{background:var(--c);color:#fff}
+.btn.green{background:var(--ok);color:#fff}
+.btn:disabled{opacity:.45}
+.btn+.btn{margin-top:10px}
+.reveal{background:#e6fbf2;color:#126b4b;border-radius:16px;padding:10px 14px;margin-bottom:10px;font-weight:800;font-size:18px;text-align:center}
+.reveal.no{background:#fff3c4;color:#7a5a00}
+/* home */
+.hero{text-align:center;padding:10px 0 4px}
+.hero .big-owl{font-size:84px;line-height:1;animation:hop 2.4s infinite}
+.hero h1{margin:6px 0 2px;font-size:28px}
+.hero p{margin:0;color:var(--muted);font-size:17px}
+.lcard{margin-top:16px;text-align:right}
+.badge{display:inline-block;background:var(--c);color:#fff;border-radius:99px;padding:4px 12px;font-size:14px;font-weight:800}
+.lcard h2{margin:10px 0 2px;font-size:26px}
+.lcard .t-en{color:var(--c);font-size:22px;font-weight:900}
+.lcard p{font-size:18px;line-height:1.7;margin:10px 0}
+.meta{display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:15px;margin-bottom:12px}
+.meta span{background:#f4f1fb;border-radius:99px;padding:5px 11px}
+.list{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.litem{display:flex;align-items:center;gap:12px;background:#fff;border-radius:18px;padding:12px 14px;box-shadow:0 3px 0 #0000000f;cursor:pointer;border:0;text-align:right;font-size:17px;width:100%}
+.litem .n{width:40px;height:40px;border-radius:12px;background:var(--c);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;flex:none}
+.litem .tt{flex:1}
+.litem .st{font-size:22px}
+.link{background:none;border:0;color:var(--c);font-weight:800;font-size:17px;cursor:pointer;padding:12px;display:block;margin:6px auto 0}
+input.inp{width:100%;font-size:22px;padding:14px 16px;border-radius:16px;border:3px solid #00000018;font-family:inherit;background:#fff;outline:none}
+input.inp:focus{border-color:var(--c)}
+input.inp.en{text-align:left}
+.gpick{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.gpick .opt.on{border-color:var(--c);background:#f3f0ff}
+/* finish */
+.trophy{font-size:96px;text-align:center;animation:hop 1.6s infinite}
+.stars{text-align:center;font-size:44px;letter-spacing:6px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.stat{background:#fff;border-radius:18px;padding:12px 6px;text-align:center;box-shadow:0 3px 0 #0000000f}
+.stat b{display:block;font-size:26px}
+.stat span{color:var(--muted);font-size:14px}
+.sec{background:#fff;border-radius:20px;padding:14px 16px;margin-top:12px;box-shadow:0 3px 0 #0000000f}
+.sec h3{margin:0 0 8px;font-size:19px}
+.sec ul{margin:0;padding-inline-start:20px;line-height:1.9;font-size:17px}
+.chal{background:linear-gradient(135deg,#ffecd2,#fcb69f);}
+.code{direction:ltr;font-family:Consolas,monospace;background:#f4f1fb;border-radius:12px;padding:10px;word-break:break-all;font-size:13px;margin:8px 0;user-select:all}
+.chips{display:flex;flex-wrap:wrap;gap:6px;direction:ltr;justify-content:flex-end}
+.chip{background:#ffeef0;color:#b3243a;border-radius:99px;padding:4px 10px;font-weight:800;font-size:15px}
+.namebig{display:flex;justify-content:center;gap:6px;direction:ltr;flex-wrap:wrap;margin-top:14px}
+.namebig span{background:var(--c);color:#fff;border-radius:12px;min-width:44px;height:52px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;animation:pop .4s backwards}
+/* parent */
+.ptabs{display:flex;gap:8px;overflow-x:auto;margin:12px 0}
+.ptab{border:0;background:#fff;border-radius:99px;padding:9px 16px;font-weight:800;font-size:16px;cursor:pointer;box-shadow:0 2px 0 #00000012;white-space:nowrap}
+.ptab.on{background:var(--c);color:#fff}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{padding:8px 6px;border-bottom:1px solid #00000010;text-align:right;vertical-align:top}
+th{color:var(--muted);font-weight:700}
+.row{display:flex;gap:8px;align-items:center}
+.row>*{flex:1}
+.sbtn{border:0;background:var(--c);color:#fff;border-radius:12px;padding:10px 14px;font-weight:800;font-size:15px;cursor:pointer;flex:none}
+.sbtn.ghost{background:#ece7f7;color:var(--ink)}
+textarea{width:100%;min-height:80px;border-radius:14px;border:2px solid #00000018;padding:10px;font-family:Consolas,monospace;direction:ltr;font-size:13px}
+.plan li.done{color:var(--ok);font-weight:800}
+.plan li.avail{color:var(--c)}
+.muted{color:var(--muted)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#2b2340;color:#fff;padding:10px 18px;border-radius:99px;font-weight:700;z-index:60;animation:pop .3s}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<div id="app"></div>
+<script>
+/* =========================================================
+   إعداد الأبناء (يمكن تعديلها أيضًا من لوحة ولي الأمر #parent)
+   gender: 'm' ذكر ، 'f' أنثى
+   ========================================================= */
+const CHILDREN = [
+  { id: 'child1', name: '', gender: 'm', level: '' },
+  { id: 'child2', name: '', gender: 'f', level: '' },
+];
+
+/* خطة الدروس */
+const PLAN = [
+  'التحية والتعارف (Hello, Good morning, My name is…)',
+  'الحروف A إلى F مع كلمة لكل حرف',
+  'الحروف G إلى L (مع مراجعة A–F)',
+  'الحروف M إلى R',
+  'الحروف S إلى Z',
+  'الحروف المتحركة القصيرة وقراءة كلمات من 3 حروف',
+  'مراجعة: الأبجدية، تهجئة الاسم، قراءة 10 كلمات قصيرة',
+  'الألوان والأرقام 1 إلى 10',
+  'sh و ch و th مع كلمات العائلة',
+  'الكلمات الشائعة (I, a, the, is, my, you) وجملة This is my…',
+  'حرف e الصامت (cake, bike, home) مع الحيوانات',
+  'قراءة جمل قصيرة',
+  'المواد الدراسية والفصل',
+  'مراجعة: قراءة قصة قصيرة',
+  'to be و have', 'الروتين اليومي', 'المضارع البسيط', 'قصص قصيرة'
+];
+
+/* =========================================================
+   الدروس — كل درس مجرد بيانات. صيغة [مذكر|مؤنث] تُختار حسب الابن.
+   {name} اسم الابن بالعربي ، {EN} اسمه بالإنجليزي
+   ========================================================= */
+const LESSONS = [
+{
+  no: 1,
+  date: '2026-11-12',
+  title: 'التحية والتعارف',
+  titleEn: 'Hello!',
+  intro: 'اليوم [ستتعلم|ستتعلمين] كيف [تسلّم|تسلّمين] على الناس بالإنجليزي، [وتعرّف|وتعرّفين] بنفسك، [وتكتب|وتكتبين] اسمك بالحروف الإنجليزية 👋',
+  words: [
+    { en: 'hello',        ar: 'مرحبًا',          pic: '🙋' },
+    { en: 'goodbye',      ar: 'مع السلامة',      pic: '👋' },
+    { en: 'good morning', ar: 'صباح الخير',      pic: '🌅' },
+    { en: 'good night',   ar: 'تصبح على خير',    pic: '🌙' },
+    { en: 'thank you',    ar: 'شكرًا',           pic: '🙏' },
+    { en: 'fine',         ar: 'بخير',            pic: '😊' },
+    { en: 'name',         ar: 'اسم',             pic: '📛' },
+    { en: 'boy',          ar: 'ولد',             pic: '👦' },
+    { en: 'girl',         ar: 'بنت',             pic: '👧' },
+  ],
+  sentences: [
+    { en: 'My name is {EN}',      ar: 'اسمي {AR}' },
+    { en: 'I am a [boy|girl]',    ar: 'أنا [ولد|بنت]' },
+    { en: 'Good morning mom',     ar: 'صباح الخير يا ماما' },
+    { en: 'I am fine thank you',  ar: 'أنا بخير، شكرًا' },
+  ],
+  chats: [
+    { bot: 'Hello!',                   ar: 'مرحبًا!',               opts: ['Hello!', 'Good night!', 'Thank you!'] },
+    { bot: 'Good morning!',            ar: 'صباح الخير!',           opts: ['Good morning!', 'Good night!', 'Goodbye!'] },
+    { bot: 'What is your name?',       ar: 'ما اسمك؟',              opts: ['My name is {EN}.', 'I am fine.', 'Good morning!'] },
+    { bot: 'How are you?',             ar: 'كيف حالك؟',             opts: ['I am fine, thank you.', 'My name is {EN}.', 'Goodbye!'] },
+    { bot: 'Are you a boy or a girl?', ar: '[هل أنت ولد أم بنت؟|هل أنتِ ولد أم بنت؟]', opts: ['I am a [boy|girl].', 'Good night!', 'Hello!'] },
+    { bot: 'Good night!',              ar: '[تصبح|تصبحين] على خير!', opts: ['Good night!', 'Good morning!', 'My name is {EN}.'] },
+    { bot: 'Goodbye!',                 ar: 'مع السلامة!',           opts: ['Goodbye!', 'Hello!', 'I am fine.'] },
+  ],
+  steps: [
+    { type: 'flash', tip: '[اسمع|اسمعي] كل كلمة [وقلها|وقوليها] بصوت عالٍ مرتين 🗣️' },
+    { type: 'listen', count: 6 },
+    { type: 'meaning', count: 6 },
+    { type: 'match', count: 2, tip: '[اضغط|اضغطي] على الكلمة ثم على صورتها' },
+    { type: 'truefalse', count: 6 },
+    { type: 'readpic', count: 5, tip: '[اقرأ|اقرئي] الكلمة بنفسك قبل ما [تختار|تختاري] 👀' },
+    { type: 'name', tip: 'الاسم يبدأ بحرف كبير، مثل: Sara أو Ali' },
+    { type: 'spell', count: 3, words: ['boy', 'girl', 'name'] },
+    { type: 'build', count: 4, tip: '[اضغط|اضغطي] الكلمات بالترتيب. الإنجليزي يُقرأ من اليسار لليمين ➡️' },
+    { type: 'chat', count: 7, tip: 'الشخص يكلمك، [اختر|اختاري] الرد المناسب 😊' },
+  ],
+  learned: [
+    'أسلّم: <span class="en">Hello!</span> وأودّع: <span class="en">Goodbye!</span>',
+    '<span class="en">Good morning</span> صباح الخير، و<span class="en">Good night</span> تصبح على خير',
+    'أعرّف بنفسي: <span class="en">My name is …</span>',
+    'أرد على كيف حالك: <span class="en">I am fine, thank you.</span>',
+    'أكتب اسمي بالحروف الإنجليزية ✍️',
+  ],
+  challenge: 'الليلة قبل النوم [قل|قولي] لأهلك <span class="en">Good night</span> 🌙، وبكرة الصبح [قل|قولي] <span class="en">Good morning</span> ☀️ لأول شخص [تشوفه|تشوفينه]!',
+},
+// @@NEXT_LESSON@@  ← الدروس الجديدة تُضاف قبل هذا السطر
+];
+
+/* =========================================================
+   أدوات عامة
+   ========================================================= */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const shuffle = a => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = (a, n) => shuffle(a).slice(0, n);
+const rand = a => a[Math.random() * a.length | 0];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+const ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const LNAME = { A: 'ay', B: 'bee', C: 'see', D: 'dee', E: 'ee', F: 'eff', G: 'jee', H: 'aitch', I: 'eye', J: 'jay', K: 'kay', L: 'el', M: 'em', N: 'en', O: 'oh', P: 'pee', Q: 'cue', R: 'ar', S: 'ess', T: 'tee', U: 'you', V: 'vee', W: 'double you', X: 'ex', Y: 'why', Z: 'zee' };
+const LN = x => LNAME[x.toUpperCase()] || x;
+const VOWELS = [
+  { l: 'a', w: 'cat', pic: '🐱', ar: 'قطة' }, { l: 'e', w: 'bed', pic: '🛏️', ar: 'سرير' },
+  { l: 'i', w: 'pin', pic: '📌', ar: 'دبوس' }, { l: 'o', w: 'dog', pic: '🐶', ar: 'كلب' },
+  { l: 'u', w: 'cup', pic: '☕', ar: 'كوب' }];
+
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('el_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('el_' + k, JSON.stringify(v)); } catch (e) { } }
+};
+function toast(t) { const d = h(`<div class="toast">${esc(t)}</div>`); document.body.append(d); setTimeout(() => d.remove(), 1800); }
+function copy(t) { (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast('تم النسخ ✅')).catch(() => { const a = h('<textarea></textarea>'); a.value = t; document.body.append(a); a.select(); document.execCommand('copy'); a.remove(); toast('تم النسخ ✅'); }); }
+
+let me = null;          // الابن الحالي {id,name,gender,en}
+const firstName = n => (n || '').trim().split(/\s+/)[0] || '';
+function T(s) {
+  if (s == null) return '';
+  const f = me && me.gender === 'f';
+  return String(s)
+    .replace(/\[([^\[\]|]*)\|([^\[\]]*)\]/g, (_, a, b) => f ? b : a)
+    .replace(/\{name\}/g, me ? firstName(me.name) : '')
+    .replace(/\{AR\}/g, me ? firstName(me.name) : '')
+    .replace(/\{EN\}/g, (me && me.en) || 'Sam');
+}
+
+/* ---------- الصوت: نطق ومؤثرات ---------- */
+let voice = null;
+function pickVoice() {
+  if (!('speechSynthesis' in window)) return;
+  const vs = speechSynthesis.getVoices();
+  voice = vs.find(v => /en[-_]US/i.test(v.lang) && /google|samantha|aria|jenny|zira/i.test(v.name))
+    || vs.find(v => /en[-_]US/i.test(v.lang)) || vs.find(v => /^en/i.test(v.lang)) || null;
+}
+if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function speak(t, rate = .8) {
+  if (!('speechSynthesis' in window) || !t) return;
+  speechSynthesis.cancel();
+  setTimeout(() => {
+    const u = new SpeechSynthesisUtterance(t);
+    u.lang = 'en-US'; if (voice) u.voice = voice; u.rate = rate;
+    speechSynthesis.speak(u);
+  }, 60);
+}
+let actx;
+function ac() { if (!actx) { const C = window.AudioContext || window.webkitAudioContext; if (C) actx = new C(); } if (actx && actx.state === 'suspended') actx.resume(); return actx; }
+function tone(f, d = .12, type = 'sine', when = 0, vol = .16) {
+  const a = ac(); if (!a) return;
+  const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.value = f;
+  const t = a.currentTime + when; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .01); g.gain.exponentialRampToValueAtTime(.001, t + d);
+  o.connect(g).connect(a.destination); o.start(t); o.stop(t + d + .03);
+}
+const sfx = {
+  ok() { tone(660, .1, 'triangle'); tone(880, .1, 'triangle', .09); tone(1320, .22, 'triangle', .18); },
+  bad() { tone(230, .16, 'square', 0, .05); tone(170, .26, 'square', .12, .05); },
+  tick() { tone(1000, .06, 'sine', 0, .08); },
+  win() { [523, 659, 784, 1047, 784, 1047, 1319].forEach((f, i) => tone(f, .24, 'triangle', i * .13)); }
+};
+function confetti(n = 60) {
+  const c = $('#fx'), x = c.getContext('2d'); c.width = innerWidth; c.height = innerHeight;
+  const cols = ['#ff8a3d', '#6c5ce7', '#1fa774', '#fdcb6e', '#e84393', '#0984e3'];
+  const ps = Array.from({ length: n }, () => ({ x: innerWidth / 2 + (Math.random() - .5) * 160, y: innerHeight * .5, vx: (Math.random() - .5) * 13, vy: -Math.random() * 15 - 5, r: Math.random() * 7 + 5, c: rand(cols), a: Math.random() * 6, va: (Math.random() - .5) * .3 }));
+  let f = 0; cancelAnimationFrame(confetti.raf);
+  (function loop() {
+    x.clearRect(0, 0, c.width, c.height);
+    ps.forEach(p => { p.vy += .42; p.x += p.vx; p.y += p.vy; p.a += p.va; x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * .6); x.restore(); });
+    if (++f < 100) confetti.raf = requestAnimationFrame(loop); else x.clearRect(0, 0, c.width, c.height);
+  })();
+}
+
+/* =========================================================
+   محرك الدروس
+   ========================================================= */
+let run = null, cur = null;
+const app = $('#app');
+const PRAISE = ['[أحسنت|أحسنتِ] يا {name}! 🌟', 'رائع! 👏', '[ممتاز|ممتازة]! 💪', 'صح! [أنت بطل|أنتِ بطلة] 🏆', 'برافو! 🎉', 'Great job! 😎', 'كذا الشغل! 🔥'];
+const TRY = ['[حاول|حاولي] مرة ثانية 💪', 'قريب! [ركّز|ركّزي] شوي 👀', 'ولا يهمك، [جرّب|جرّبي] غيرها 🙂', 'الغلط يعلّمنا! مرة ثانية 🦉'];
+
+function allWords() { const m = new Map(); LESSONS.forEach(L => L.words.forEach(w => m.set(w.en.toLowerCase(), w))); return m; }
+function poolFor(st, L) {
+  let ws;
+  if (st.words) { const m = allWords(); ws = st.words.map(e => m.get(String(e).toLowerCase())).filter(Boolean); }
+  else if (st.from) { ws = [].concat(st.from).flatMap(n => (LESSONS.find(x => x.no === n) || { words: [] }).words); }
+  else ws = L.words;
+  const only = (st.only || st.letters || []).map(x => x.toUpperCase());
+  if (only.length) { const f = ws.filter(w => only.includes((w.letter || w.en[0]).toUpperCase())); if (f.length) ws = f; }
+  return ws.length ? ws : L.words;
+}
+function lettersFor(st, L) {
+  const only = st.only || st.letters; if (only) return only.map(x => x.toUpperCase());
+  return [...new Set(poolFor(st, L).map(w => (w.letter || w.en[0]).toUpperCase()))];
+}
+function cycle(arr, n) { const out = []; let bag = []; while (out.length < n && arr.length) { if (!bag.length) { bag = shuffle(arr); if (out.length && bag.length > 1 && bag[bag.length - 1] === out[out.length - 1]) bag.unshift(bag.pop()); } out.push(bag.pop()); } return out; }
+function distractWords(pool, w, n) {
+  const ok = x => x.en !== w.en && x.pic !== w.pic && x.ar !== w.ar;
+  let d = pick(pool.filter(ok), n);
+  if (d.length < n) { const more = [...allWords().values()].filter(x => ok(x) && !d.includes(x)); d = d.concat(pick(more, n - d.length)); }
+  return d;
+}
+function distractLetters(pool, X, n) {
+  let d = pick(pool.filter(l => l !== X), n);
+  if (d.length < n) d = d.concat(pick(ABC.filter(l => l !== X && !d.includes(l)), n - d.length));
+  return d;
+}
+const wordHtml = w => esc(T(w.en));
+
+/* ---- مساعدات الأسئلة ---- */
+function sayBtn(el, text, big) { const b = h(`<button class="say ${big ? 'big' : ''}" aria-label="استمع">🔊</button>`); b.onclick = () => speak(text); el.append(b); return b; }
+function choices(el, opts, isRight, { cls = '', key, onRight } = {}) {
+  const box = h(`<div class="opts ${cls}"></div>`);
+  opts.forEach(o => {
+    const b = h(`<button class="opt">${o.html}</button>`);
+    b.onclick = () => {
+      if (cur.done) return;
+      if (isRight(o)) { b.classList.add('right'); $$('.opt', box).forEach(x => x.disabled = true); onRight && onRight(o); api.ok(); }
+      else { b.classList.add('wrong'); b.disabled = true; api.bad(key); }
+    };
+    o.btn = b; box.append(b);
+  });
+  el.append(box);
+  cur.auto = () => opts.find(isRight).btn.click();
+  return box;
+}
+function board(el, pairs, { left, right, onLeft, key, rightCls = '' }) {
+  const wrap = h('<div class="board"><div class="col L"></div><div class="col R"></div></div>');
+  let sel = null, remain = pairs.length, errs = 0;
+  shuffle(pairs).forEach(p => {
+    const b = h(`<button class="tile">${left(p)}</button>`);
+    b.onclick = () => { if (b.disabled) return; $$('.L .tile', wrap).forEach(x => x.classList.remove('sel')); b.classList.add('sel'); sel = p; onLeft && onLeft(p); };
+    p._l = b; $('.L', wrap).append(b);
+  });
+  shuffle(pairs).forEach(p => {
+    const b = h(`<button class="tile ${rightCls}">${right(p)}</button>`);
+    b.onclick = () => {
+      if (b.disabled) return;
+      if (!sel) { owlSay(T('[ابدأ|ابدئي] من العمود الأول 👉')); return; }
+      if (sel === p) {
+        p._l.classList.remove('sel'); p._l.classList.add('done'); b.classList.add('done'); p._l.disabled = b.disabled = true; sel = null; sfx.tick();
+        if (--remain === 0) api.ok(Math.max(4, 10 - 2 * errs));
+      } else { b.classList.add('wrong'); setTimeout(() => b.classList.remove('wrong'), 450); errs++; api.miss(key(sel)); }
+    };
+    p._r = b; $('.R', wrap).append(b);
+  });
+  el.append(wrap);
+  cur.auto = () => pairs.forEach(p => { if (!p._l.disabled) { p._l.click(); p._r.click(); } });
+}
+
+/* ---- أنواع التمارين ---- */
+const TYPES = {
+  flash: {
+    title: '[تعرّف|تعرّفي] على الكلمات', icon: '🃏', color: '#6c5ce7',
+    build(st, L) {
+      const ws = poolFor(st, L);
+      return (st.count ? ws.slice(0, st.count) : ws).map(w => ({
+        render(el) {
+          const c = h(`<div class="card"><div class="pic">${w.pic}</div><div class="word en">${wordHtml(w)}</div><div class="ar">${esc(T(w.ar))}</div></div>`);
+          sayBtn(c, T(w.en)); el.append(c); speak(T(w.en));
+          owlSay(T('[اضغط|اضغطي] 🔊 [وردّد|وردّدي] الكلمة')); api.info();
+        }
+      }));
+    }
+  },
+  abc: {
+    title: 'الحروف', icon: '🔤', color: '#0984e3',
+    build(st, L) {
+      const ws = poolFor(st, L);
+      return lettersFor(st, L).map(X => ({
+        render(el) {
+          const w = ws.find(x => (x.letter || x.en[0]).toUpperCase() === X);
+          const c = h(`<div class="card"><div class="abc en">${X}<span>${X.toLowerCase()}</span></div>${w ? `<div class="pic sm">${w.pic}</div><div class="word sm en"><b>${esc(w.en[0])}</b>${esc(w.en.slice(1))}</div><div class="ar">${esc(w.ar)}</div>` : ''}</div>`);
+          const t = LN(X) + '. ' + (w ? LN(X) + ' is for ' + w.en : LN(X));
+          sayBtn(c, t); el.append(c); speak(t);
+          owlSay(T('[قل|قولي] اسم الحرف معي: ') + `<span class="en">${X}</span>`); api.info();
+        }
+      }));
+    }
+  },
+  vowels: {
+    title: 'الحروف المتحركة a e i o u', icon: '🎵', color: '#e67e22',
+    build(st) {
+      return VOWELS.filter(v => !st.only || st.only.map(x => x.toLowerCase()).includes(v.l)).map(v => ({
+        render(el) {
+          const c = h(`<div class="card"><div class="abc en">${v.l}</div><div class="pic sm">${v.pic}</div><div class="word sm en">${v.w.replace(v.l, `<b>${v.l}</b>`)}</div><div class="ar">${v.ar}</div></div>`);
+          const t = `${v.w}. ${v.w}`; sayBtn(c, t); el.append(c); speak(t);
+          owlSay(T(`الحرف <span class="en">${v.l}</span> في <span class="en">${v.w}</span> له صوت قصير، [اسمعه|اسمعيه] [وقلده|وقلديه]`)); api.info();
+        }
+      }));
+    }
+  },
+  listen: {
+    title: '[اسمع|اسمعي] [واختر|واختاري] الصورة', icon: '👂', color: '#00a884',
+    build(st, L) {
+      const ws = poolFor(st, L);
+      return cycle(ws, st.count || 6).map(w => ({
+        scored: 1, render(el) {
+          const c = h('<div class="center"></div>'); sayBtn(c, T(w.en), true); c.append(h(`<div class="hint">${T('[اضغط|اضغطي] السماعة [واسمع|واسمعي] جيدًا')}</div>`)); el.append(c);
+          speak(T(w.en));
+          const opts = shuffle([w, ...distractWords(ws, w, (st.options || 3) - 1)]).map(v => ({ html: v.pic, v }));
+          choices(el, opts, o => o.v === w, { cls: opts.length === 3 ? 'pics three' : 'pics', key: w.en });
+          cur.reveal = `<span class="en">${wordHtml(w)}</span> = ${esc(T(w.ar))}`;
+        }
+      }));
+    }
+  },
+  letterlisten: {
+    title: '[اسمع|اسمعي] [واختر|واختاري] الحرف', icon: '🔊', color: '#0097a7',
+    build(st, L) {
+      const ls = lettersFor(st, L);
+      return cycle(ls, st.count || 6).map(X => ({
+        scored: 1, render(el) {
+          const c = h('<div class="center"></div>'); sayBtn(c, LN(X), true); el.append(c); speak(LN(X));
+          const opts = shuffle([X, ...distractLetters(ls, X, (st.options || 4) - 1)]).map(v => ({ html: `<span class="en">${v}<small>${v.toLowerCase()}</small></span>`, v }));
+          choices(el, opts, o => o.v === X, { cls: 'letters', key: X });
+        }
+      }));
+    }
+  },
+  meaning: {
+    title: '[اختر|اختاري] المعنى بالعربي', icon: '💬', color: '#d35400',
+    build(st, L) {
+      const ws = poolFor(st, L);
+      return cycle(ws, st.count || 6).map(w => ({
+        scored: 1, render(el) {
+          const c = h(`<div class="card"><div class="word en">${wordHtml(w)}</div></div>`); sayBtn(c, T(w.en)); el.append(c); speak(T(w.en));
+          const opts = shuffle([w, ...distractWords(ws, w, (st.options || 4) - 1)]).map(v => ({ html: esc(T(v.ar)), v }));
+          choices(el, opts, o => o.v === w, { key: w.en });
+          cur.reveal = `${w.pic} <span class="en">${wordHtml(w)}</span> = ${esc(T(w.ar))}`;
+        }
+      }));
+    }
+  },
+  casematch: {
+    title: '[وصّل|وصّلي] الحرف الكبير بالصغير', icon: '🔗', color: '#d63384',
+    build(st, L) {
+      const ls = lettersFor(st, L); const n = st.count || Math.max(1, Math.ceil(ls.length / 4));
+      const seq = cycle(ls, n * Math.min(4, ls.length));
+      return Array.from({ length: n }, (_, i) => ({
+        scored: 1, render(el) {
+          const set = [...new Set(seq.slice(i * 4, i * 4 + 4))];
+          board(el, set.map(X => ({ X })), { left: p => `<span class="en">${p.X}</span>`, right: p => `<span class="en">${p.X.toLowerCase()}</span>`, onLeft: p => speak(LN(p.X)), key: p => p.X });
+        }
+      }));
+    }
+  },
+  starts: {
+    title: 'بأي حرف تبدأ الكلمة؟', icon: '🅰️', color: '#c78a00',
+    build(st, L) {
+      const ws = poolFor(st, L), ls = lettersFor(st, L);
+      return cycle(ws, st.count || 5).map(w => ({
+        scored: 1, render(el) {
+          const X = w.en[0].toUpperCase();
+          const c = h(`<div class="card"><div class="pic">${w.pic}</div><div class="word en"><b>_</b>${esc(w.en.slice(1))}</div></div>`); sayBtn(c, w.en); el.append(c); speak(w.en);
+          const opts = shuffle([X, ...distractLetters(ls, X, 2)]).map(v => ({ html: `<span class="en">${v}<small>${v.toLowerCase()}</small></span>`, v }));
+          choices(el, opts, o => o.v === X, { cls: 'letters three', key: w.en, onRight: () => { $('.word', c).innerHTML = `<b>${esc(w.en[0])}</b>${esc(w.en.slice(1))}`; } });
+        }
+      }));
+    }
+  },
+  match: {
+    title: '[وصّل|وصّلي] الكلمة بصورتها', icon: '🧩', color: '#7b61ff',
+    build(st, L) {
+      const ws = poolFor(st, L); const n = st.count || 2; const seq = shuffle(ws);
+      return Array.from({ length: n }, (_, i) => ({
+        scored: 1, render(el) {
+          let set = []; for (let k = 0; set.length < Math.min(4, ws.length); k++) { const w = seq[(i * 4 + k) % seq.length]; if (!set.includes(w)) set.push(w); }
+          board(el, set.map(w => ({ w })), { left: p => `<span class="en">${wordHtml(p.w)}</span>`, right: p => p.w.pic, rightCls: 'pic', onLeft: p => speak(T(p.w.en)), key: p => p.w.en });
+        }
+      }));
+    }
+  },
+  truefalse: {
+    title: 'صح أو خطأ؟', icon: '⚖️', color: '#e5485a',
+    build(st, L) {
+      const ws = poolFor(st, L);
+      return cycle(ws, st.count || 6).map((w, i) => ({
+        scored: 1, render(el) {
+          const truth = Math.random() < .5;
+          const shown = truth ? w : (distractWords(ws, w, 1)[0] || w); const isTrue = shown === w;
+          const c = h(`<div class="card"><div class="pic">${w.pic}</div><div class="word en">${wordHtml(shown)}</div><div class="hint">${T('هل الكلمة تناسب الصورة؟')}</div></div>`);
+          sayBtn(c, T(shown.en)); el.append(c); speak(T(shown.en));
+          choices(el, [{ html: '✔️ صح', v: true }, { html: '✖️ خطأ', v: false }], o => o.v === isTrue, { cls: 'tf', key: w.en });
+          cur.reveal = isTrue ? `${w.pic} = <span class="en">${wordHtml(w)}</span> ✔️` : `${w.pic} = <span class="en">${wordHtml(w)}</span> ${T('وليس')} <span class="en">${wordHtml(shown)}</span>`;
+        }
+      }));
+    }
+  },
+  readpic: {
+    title: '[اقرأ|اقرئي] [واختر|واختاري] الصورة', icon: '📖', color: '#2d7dd2',
+    build(st, L) {
+      const ws = poolFor(st, L);
+      return cycle(ws, st.count || 5).map(w => ({
+        scored: 1, render(el) {
+          el.append(h(`<div class="card"><div class="word en">${wordHtml(w)}</div><div class="hint">${T('بدون سماعة! [اقرأ|اقرئي] بنفسك 🤓')}</div></div>`));
+          const opts = shuffle([w, ...distractWords(ws, w, (st.options || 3) - 1)]).map(v => ({ html: v.pic, v }));
+          choices(el, opts, o => o.v === w, { cls: opts.length === 3 ? 'pics three' : 'pics', key: w.en, onRight: () => speak(T(w.en)) });
+        }
+      }));
+    }
+  },
+  spell: {
+    title: '[رتّب|رتّبي] الحروف', icon: '✏️', color: '#3867d6',
+    build(st, L) {
+      const ws = poolFor(st, L).filter(w => /^[a-z]{2,8}$/i.test(T(w.en)));
+      return cycle(ws.length ? ws : poolFor(st, L), st.count || 3).map(w => ({
+        scored: 1, render(el) {
+          const word = T(w.en).toLowerCase(), letters = [...word], fo = st.firstOnly;
+          const c = h(`<div class="card"><div class="pic">${w.pic}</div><div class="ar">${esc(T(w.ar))}</div></div>`); sayBtn(c, word); el.append(c);
+          if (!fo) speak(word);
+          const slots = h(`<div class="slots">${letters.map((ch, i) => `<span class="slot ${fo && i > 0 ? 'fixed' : ''}">${fo && i > 0 ? ch : ''}</span>`).join('')}</div>`);
+          el.append(slots);
+          const pool = fo ? shuffle([letters[0], ...pick(ABC.map(x => x.toLowerCase()).filter(x => x !== letters[0]), 3)]) : shuffle(letters);
+          const tiles = h('<div class="tiles"></div>'); el.append(tiles);
+          let pos = 0, errs = 0; const need = fo ? 1 : letters.length;
+          pool.forEach(ch => {
+            const b = h(`<button class="ltile">${ch}</button>`);
+            b.onclick = () => {
+              if (cur.done || b.disabled) return;
+              if (ch === letters[pos]) {
+                const s = slots.children[pos]; s.textContent = ch; s.classList.add('filled'); b.disabled = true; pos++; sfx.tick();
+                if (pos === need) { if (fo) $$('.ltile', tiles).forEach(x => x.disabled = true); speak(word); api.ok(errs ? (errs > 2 ? 4 : 6) : 10); }
+              } else { b.classList.add('wrong'); setTimeout(() => b.classList.remove('wrong'), 450); errs++; api.miss(w.en); }
+            };
+            tiles.append(b);
+          });
+          cur.auto = () => { while (!cur.done) { const b = $$('.ltile', tiles).find(x => !x.disabled && x.textContent === letters[pos]); if (!b) break; b.click(); } };
+          owlSay(T(fo ? 'ما هو الحرف الأول؟ 🤔' : '[اضغط|اضغطي] الحروف بالترتيب من اليسار ➡️'));
+        }
+      }));
+    }
+  },
+  build: {
+    title: '[كوّن|كوّني] الجملة', icon: '🧱', color: '#0a9396',
+    build(st, L) {
+      const ss = st.sentences || (st.from ? [].concat(st.from).flatMap(n => (LESSONS.find(x => x.no === n) || {}).sentences || []) : L.sentences) || [];
+      const n = st.count || 4;
+      return (n <= ss.length ? pick(ss, n) : cycle(ss, n)).map(s => ({
+        scored: 1, render(el) {
+          const en = T(s.en), toks = en.replace(/[.,!?]/g, '').split(/\s+/).filter(Boolean);
+          const c = h(`<div class="card"><div class="word sm">${esc(T(s.ar))}</div></div>`); sayBtn(c, en); el.append(c);
+          const line = h('<div class="line"></div>'), bank = h('<div class="tiles bank"></div>');
+          const chk = h(`<button class="btn primary" style="margin-top:14px" disabled>${T('[تحقق|تحققي]')} ✔️</button>`);
+          el.append(line, bank, chk);
+          const items = shuffle(toks.map((t, i) => ({ t, i })));
+          let placed = [], attempts = 0, hint = false;
+          const draw = () => {
+            line.innerHTML = ''; bank.innerHTML = '';
+            placed.forEach((it, k) => { const b = h(`<button class="wtile en ${hint && k === 0 ? 'hint' : ''}">${esc(it.t)}</button>`); b.onclick = () => { if (hint && k === 0) return; placed.splice(k, 1); draw(); }; line.append(b); });
+            items.filter(it => !placed.includes(it)).forEach(it => { const b = h(`<button class="wtile en">${esc(it.t)}</button>`); b.onclick = () => { placed.push(it); sfx.tick(); speak(it.t, .9); draw(); }; bank.append(b); });
+            chk.disabled = placed.length !== toks.length || cur.done;
+          };
+          chk.onclick = () => {
+            if (placed.map(p => p.t).join(' ') === toks.join(' ')) { chk.disabled = true; $$('button', line).forEach(b => b.disabled = true); speak(en); api.ok(attempts ? (attempts >= 2 ? 4 : 6) : 10); return; }
+            attempts++; api.miss(en); line.classList.add('bad'); setTimeout(() => line.classList.remove('bad'), 450);
+            if (attempts >= 4) { placed = toks.map(t => items.find(it => it.t === t && !0)); line.innerHTML = `<span class="en" style="font-size:22px;font-weight:800">${esc(en)}</span>`; bank.innerHTML = ''; chk.style.display = 'none'; speak(en); api.reveal(`${T('الجملة الصحيحة')}: <span class="en">${esc(en)}</span>`); return; }
+            if (attempts >= 2) { hint = true; const first = items.find(it => it.t === toks[0]); placed = [first]; owlSay(T('تلميح 💡 أول كلمة هي: ') + `<span class="en">${esc(toks[0])}</span>`); }
+            else placed = [];
+            draw();
+          };
+          draw();
+          cur.auto = () => { const used = new Set(); placed = toks.map(t => { const it = items.find(x => x.t === t && !used.has(x)); used.add(it); return it; }); draw(); chk.click(); };
+        }
+      }));
+    }
+  },
+  chat: {
+    title: 'محادثة 🗨️', icon: '🗨️', color: '#c2185b',
+    build(st, L) {
+      const cs = st.chats || L.chats || []; const n = st.count || cs.length;
+      return (n <= cs.length ? cs.slice(0, n) : cycle(cs, n)).map(ch => ({
+        scored: 1, render(el) {
+          const box = h(`<div class="chat"><div class="msg bot"><span class="who">🧑‍🏫</span><div class="b"><div class="en">${esc(T(ch.bot))}</div><div class="ar">${esc(T(ch.ar))}</div></div></div></div>`);
+          sayBtn($('.b', box), T(ch.bot)).style.cssText = 'width:42px;height:42px;font-size:18px;margin-top:6px';
+          el.append(box); speak(T(ch.bot));
+          const right = T(ch.opts[ch.a || 0]);
+          const opts = shuffle(ch.opts.map(o => ({ html: `<span class="en">${esc(T(o))}</span>`, v: T(o) })));
+          choices(el, opts, o => o.v === right, { cls: 'one', key: T(ch.bot) + ' → ' + right, onRight: () => { box.append(h(`<div class="msg me"><span class="who">${me && me.gender === 'f' ? '👧' : '👦'}</span><div class="b"><div class="en">${esc(right)}</div></div></div>`)); speak(right); } });
+        }
+      }));
+    }
+  },
+  name: {
+    title: '[اكتب|اكتبي] اسمك بالإنجليزي', icon: '📝', color: '#8e44ad',
+    build() {
+      return [{
+        render(el) {
+          const c = h(`<div class="card"><div class="pic">📛</div><div class="hint">${T('[اكتب|اكتبي] اسمك بالحروف الإنجليزية')}</div><input class="inp en" maxlength="20" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Name" value="${esc((me && me.en) || '')}"><div class="namebig"></div></div>`);
+          el.append(c);
+          const inp = $('input', c), go = h(`<button class="btn primary" style="margin-top:14px">${T('[تم|تم]')} ✔️</button>`); el.append(go);
+          const done = () => {
+            let v = inp.value.trim().replace(/\s+/g, ' ');
+            if (!/^[A-Za-z][A-Za-z ]{1,19}$/.test(v)) { inp.focus(); sfx.bad(); owlSay(T('[استخدم|استخدمي] الحروف الإنجليزية فقط، مثل: Sara')); return; }
+            v = v.split(' ').map(p => p[0].toUpperCase() + p.slice(1).toLowerCase()).join(' ');
+            inp.value = v; inp.disabled = true; go.remove();
+            if (me) { me.en = v; saveMe(); }
+            $('.namebig', c).innerHTML = [...v].map((ch, i) => ch === ' ' ? '<i style="width:10px"></i>' : `<span style="animation-delay:${i * .12}s">${ch}</span>`).join('');
+            speak(`My name is ${v}. ${[...v.replace(/ /g, '')].map(LN).join(', ')}`, .75); sfx.ok(); confetti(40);
+            owlSay(T('اسم جميل! [لاحظ|لاحظي] أن أول حرف كبير 😍')); api.info();
+          };
+          go.onclick = done; inp.onkeydown = e => { if (e.key === 'Enter') done(); };
+          cur.auto = () => { if (!inp.value) inp.value = 'Sam'; done(); };
+          setTimeout(() => inp.focus(), 200);
+        }
+      }];
+    }
+  },
+};
+
+/* ---- واجهة السؤال ---- */
+const api = {
+  info() { cur.done = 1; showNext(); },
+  ok(pts = 10) {
+    if (cur.done) return; cur.done = 1;
+    const p = cur.tries ? Math.min(pts, 5) : pts;
+    run.score += p; run.max += 10; run.right++;
+    sfx.ok(); confetti(cur.tries ? 20 : 45); owlSay(T(rand(PRAISE)), 'happy'); showNext(cur.reveal);
+  },
+  bad(key) { cur.tries = (cur.tries || 0) + 1; api.miss(key); },
+  miss(key) { run.wrong++; if (key) run.mistakes[key] = (run.mistakes[key] || 0) + 1; sfx.bad(); owlSay(T(rand(TRY)), 'sad'); },
+  reveal(html) { if (cur.done) return; cur.done = 1; run.max += 10; showNext(html, true); },
+};
+function owlSay(html, mood) {
+  const o = $('.owl'); if (!o) return;
+  $('.bubble', o).innerHTML = html; o.className = 'owl'; void o.offsetWidth; if (mood) o.classList.add(mood);
+}
+function showNext(reveal, no) {
+  const last = run.i === run.qs.length - 1;
+  const f = $('.foot'); f.innerHTML = `${reveal ? `<div class="reveal ${no ? 'no' : ''}">${reveal}</div>` : ''}<button class="btn primary nextbtn">${last ? 'النهاية 🏁' : 'التالي ←'}</button>`;
+  $('.nextbtn', f).onclick = () => { run.i++; renderQ(); };
+}
+
+function buildRun(L) {
+  const r = { L, score: 0, max: 0, right: 0, wrong: 0, mistakes: {}, i: 0, qs: [] };
+  L.steps.forEach((st, si) => {
+    const def = TYPES[st.type]; if (!def) { console.warn('نوع غير معروف', st.type); return; }
+    const qs = def.build(st, L); qs.forEach((q, k) => { q.st = st; q.def = def; q.first = k === 0; q.si = si; }); r.qs.push(...qs);
+  });
+  return r;
+}
+function renderQ() {
+  cur = run.qs[run.i];
+  if (!cur) return finish();
+  const st = cur.st, def = cur.def;
+  document.documentElement.style.setProperty('--c', def.color);
+  const pct = Math.round(run.i / run.qs.length * 100);
+  app.innerHTML = `
+    <div class="top"><button class="x" title="خروج">✕</button><div class="bar"><i style="width:${pct}%"></i></div><div class="pts">⭐ ${run.score}</div></div>
+    <div class="stephead"><span class="ico">${def.icon}</span><div><div class="sttitle">${st.review ? 'مراجعة: ' : ''}${T(st.title || def.title)}</div>${st.tip && cur.first ? `<div class="tip">💡 ${T(st.tip)}</div>` : ''}</div></div>
+    <div class="qbody"></div>
+    <div class="owl"><div class="face">🦉</div><div class="bubble"></div></div>
+    <div class="foot"></div>`;
+  $('.x').onclick = () => { if (confirm(T('[متأكد|متأكدة] تبي [تطلع|تطلعين]؟ تقدّمك في هذا الدرس بيضيع.'))) { window.speechSynthesis && speechSynthesis.cancel(); home(run.L); } };
+  window.scrollTo(0, 0);
+  try { cur.render($('.qbody')); }
+  catch (e) { console.error(e); $('.qbody').innerHTML = '<div class="card">صار خطأ بسيط في هذا السؤال، نكمل 🙂</div>'; api.info(); }
+}
+
+/* ---- النهاية ---- */
+async function finish() {
+  const L = run.L, secs = Math.round((Date.now() - run.start) / 1000);
+  const pct = run.max ? Math.round(run.score / run.max * 100) : 100;
+  const mistakes = Object.entries(run.mistakes).sort((a, b) => b[1] - a[1]).slice(0, 15);
+  const res = { c: me.id, n: me.name, g: me.gender, e: me.en || '', l: L.no, s: run.score, x: run.max, p: pct, t: secs, m: Object.fromEntries(mistakes), d: new Date().toISOString().slice(0, 16) };
+  addResults([res]);
+  cur = null; const code = await encodeResult(res);
+  const stars = pct >= 90 ? 3 : pct >= 70 ? 2 : 1;
+  document.documentElement.style.setProperty('--c', '#ff8a3d');
+  const mins = Math.floor(secs / 60), ss = secs % 60;
+  app.innerHTML = `
+    <div class="trophy">${stars === 3 ? '🏆' : stars === 2 ? '🥈' : '🎖️'}</div>
+    <h1 style="text-align:center;margin:4px 0">${T('[أنهيت|أنهيتِ] الدرس يا {name}!')}</h1>
+    <div class="stars">${'⭐'.repeat(stars)}${'<span style="opacity:.2">⭐</span>'.repeat(3 - stars)}</div>
+    <div class="stats"><div class="stat"><b>${run.score}</b><span>نقطة</span></div><div class="stat"><b>${pct}%</b><span>الدرجة</span></div><div class="stat"><b>${mins}:${String(ss).padStart(2, '0')}</b><span>الوقت</span></div></div>
+    <div class="sec"><h3>🧠 ماذا تعلمت اليوم؟</h3><ul>${(L.learned || []).map(x => `<li>${T(x)}</li>`).join('')}</ul></div>
+    ${mistakes.length ? `<div class="sec"><h3>🔁 ${T('كلمات [تحتاج|تحتاجين] تراجعها')}</h3><div class="chips">${mistakes.slice(0, 8).map(([k]) => `<span class="chip">${esc(k)}</span>`).join('')}</div></div>` : `<div class="sec"><h3>💯 ${T('ولا غلطة! [أنت|أنتِ] نجم')}</h3></div>`}
+    <div class="sec chal"><h3>🎯 تحدي اليوم</h3><div style="font-size:18px;line-height:1.8">${T(L.challenge || '')}</div></div>
+    <div class="sec"><h3>📨 ${T('[أرسل|أرسلي] هذه الشفرة لبابا')}</h3><div class="code">${code}</div>
+      <div class="row"><button class="sbtn" id="cp">📋 نسخ الشفرة</button><a class="sbtn" style="text-decoration:none;text-align:center;background:#25d366" target="_blank" href="https://wa.me/?text=${encodeURIComponent('نتيجتي في درس الإنجليزي ' + L.no + ' 🦉\n' + code)}">واتساب</a></div></div>
+    <div class="foot" style="position:static"><button class="btn primary" id="again">🔁 ${T('[أعد|أعيدي]')} الدرس</button><button class="btn" id="hm">🏠 الرئيسية</button></div>`;
+  $('#cp').onclick = () => copy(code);
+  $('#again').onclick = () => startLesson(L);
+  $('#hm').onclick = () => home(L);
+  sfx.win(); confetti(160); setTimeout(() => confetti(120), 700);
+  cur = null; window.__lastResult = res;
+}
+
+/* ---- الشفرة والنتائج ---- */
+function b64e(str) { const b = new TextEncoder().encode(str); let s = ''; b.forEach(c => s += String.fromCharCode(c)); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+function b64d(s) { s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; const bin = atob(s); return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0))); }
+const bytesB64 = u8 => { let s = ''; u8.forEach(c => s += String.fromCharCode(c)); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
+const b64Bytes = s => { s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+async function pipe(u8, stream) { return new Uint8Array(await new Response(new Blob([u8]).stream().pipeThrough(stream)).arrayBuffer()); }
+async function encodeResult(r) {
+  const json = JSON.stringify(r);
+  try { if (window.CompressionStream) return 'EZ-' + bytesB64(await pipe(new TextEncoder().encode(json), new CompressionStream('deflate-raw'))); } catch (e) { }
+  return 'EL-' + b64e(json);
+}
+async function decodeResult(code) {
+  code = code.trim(); let json;
+  if (code.startsWith('EZ-')) json = new TextDecoder().decode(await pipe(b64Bytes(code.slice(3)), new DecompressionStream('deflate-raw')));
+  else json = b64d(code.replace(/^EL-/, ''));
+  const o = JSON.parse(json); if (!o || !o.l || !o.c) throw 0; return o;
+}
+function addResults(list) {
+  const all = store.get('results', []); let added = 0;
+  list.forEach(r => { if (!all.some(x => x.c === r.c && x.l === r.l && x.d === r.d)) { all.push(r); added++; } });
+  store.set('results', all); return added;
+}
+
+/* =========================================================
+   الشاشات
+   ========================================================= */
+function getProfiles() {
+  const saved = store.get('profiles', {}), out = {};
+  CHILDREN.forEach(c => out[c.id] = { ...c, ...(saved[c.id] || {}) });
+  Object.keys(saved).forEach(k => { if (!out[k]) out[k] = { id: k, ...saved[k] }; });
+  return out;
+}
+function saveMe() { store.set('me', me); }
+function parseHash() {
+  const r = {};
+  location.hash.slice(1).split(/[&/]/).filter(Boolean).forEach(p => {
+    let m; p = p.trim();
+    if (p === 'parent') r.parent = true;
+    else if (p === 'autotest') r.autotest = true;
+    else if (p === 'lessons') r.lessons = true;
+    else if ((m = p.match(/^lesson-?(\d+)$/))) r.lesson = +m[1];
+    else if ((m = p.match(/^(child\d+)$/))) r.child = m[1];
+    else if ((m = p.match(/^([a-z]+)=(.*)$/))) { try { r[m[1]] = decodeURIComponent(m[2]); } catch (e) { r[m[1]] = m[2]; } }
+  });
+  return r;
+}
+function resolveChild(r) {
+  const prev = store.get('me', null);
+  if (r.child) {
+    const base = getProfiles()[r.child] || { id: r.child, name: '', gender: 'm' };
+    const keep = prev && prev.id === r.child ? prev : {};
+    me = { id: r.child, name: r.n || keep.name || base.name || '', gender: r.g || keep.gender || base.gender || 'm', en: keep.en || base.en || '' };
+    if (me.name) saveMe();
+  } else me = prev;
+  if (me && !me.name) me = null;
+}
+function latest() { return LESSONS[LESSONS.length - 1]; }
+function myResults() { return store.get('results', []).filter(x => me && x.c === me.id); }
+
+function setupView(r) {
+  document.documentElement.style.setProperty('--c', '#6c5ce7');
+  let g = null;
+  app.innerHTML = `<div class="hero"><div class="big-owl">🦉</div><h1>أهلًا وسهلًا!</h1><p>أنا بومة، رفيقتك في رحلة الإنجليزي ✨</p></div>
+    <div class="card" style="margin-top:16px;text-align:right"><h3 style="margin-top:0">وش اسمك؟</h3><input class="inp" id="nm" maxlength="20" placeholder="اكتب اسمك هنا">
+    <div class="gpick"><button class="opt" data-g="m">👦 ولد</button><button class="opt" data-g="f">👧 بنت</button></div>
+    <button class="btn primary" id="go" disabled>يلا نبدأ 🚀</button></div>`;
+  const nm = $('#nm'), go = $('#go'), upd = () => go.disabled = !(nm.value.trim() && g);
+  nm.oninput = upd;
+  $$('.gpick .opt').forEach(b => b.onclick = () => { g = b.dataset.g; $$('.gpick .opt').forEach(x => x.classList.toggle('on', x === b)); upd(); });
+  go.onclick = () => { me = { id: r.child || 'guest', name: nm.value.trim(), gender: g, en: '' }; saveMe(); home(r.lesson && LESSONS.find(x => x.no === r.lesson) || latest()); };
+}
+
+function home(L) {
+  L = L || latest(); run = null; cur = null;
+  document.documentElement.style.setProperty('--c', '#6c5ce7');
+  const res = myResults(), best = n => Math.max(-1, ...res.filter(x => x.l === n).map(x => x.p));
+  const isLatest = L === latest(), b = best(L.no);
+  const pre = buildRun(L);
+  app.innerHTML = `
+    <div class="hero"><div class="big-owl">🦉</div><h1>${T('أهلًا يا {name}! 👋')}</h1><p>${T('[جاهز|جاهزة] لدرس اليوم؟')}</p></div>
+    <div class="card lcard">
+      <span class="badge">${isLatest ? '✨ درس اليوم' : 'الدرس ' + L.no}</span> ${b >= 0 ? `<span class="badge" style="background:var(--ok)">✔ ${T('[أنجزته|أنجزتِه]')} ${b}%</span>` : ''}
+      <h2>الدرس ${L.no}: ${esc(L.title)}</h2><div class="t-en en" style="text-align:right">${esc(L.titleEn || '')}</div>
+      <p>${T(L.intro)}</p>
+      <div class="meta"><span>⏱️ حوالي 15 دقيقة</span><span>❓ ${pre.qs.length} سؤال</span><span>🔤 ${L.words.length} كلمات</span></div>
+      <button class="btn primary" id="start">${b >= 0 ? '🔁 أعد الدرس' : '🚀 يلا نبدأ'}</button>
+    </div>
+    <button class="link" id="all">📚 كل الدروس (${LESSONS.length})</button>
+    <button class="link" id="sw" style="font-size:14px;color:var(--muted)">${T('[لست|لستِ]')} ${esc(firstName(me.name))}؟ تغيير الاسم</button>`;
+  $('#start').onclick = () => { ac(); startLesson(L, pre); };
+  $('#all').onclick = lessonsList;
+  $('#sw').onclick = () => { store.set('me', null); me = null; setupView({}); };
+}
+function lessonsList() {
+  const res = myResults();
+  app.innerHTML = `<div class="top"><button class="x" id="bk">→</button><h2 style="margin:0;flex:1">📚 كل الدروس</h2></div>
+    <div class="list">${[...LESSONS].reverse().map(L => { const b = Math.max(-1, ...res.filter(x => x.l === L.no).map(x => x.p)); return `<button class="litem" data-n="${L.no}"><span class="n">${L.no}</span><span class="tt"><b>${esc(L.title)}</b><br><span class="muted en">${esc(L.titleEn || '')}</span></span><span class="st">${b >= 0 ? (b >= 90 ? '🏆' : '✅') : (L === latest() ? '✨' : '▶️')}</span></button>`; }).join('')}</div>`;
+  $('#bk').onclick = () => home();
+  $$('.litem').forEach(b => b.onclick = () => home(LESSONS.find(x => x.no === +b.dataset.n)));
+}
+function startLesson(L, pre) {
+  run = pre && pre.L === L && pre.i === 0 && !pre.used ? pre : buildRun(L);
+  run.used = true; run.start = Date.now(); run.i = 0;
+  renderQ();
+}
+
+/* =========================================================
+   لوحة ولي الأمر
+   ========================================================= */
+const hash = s => { let x = 5381; for (const c of s) x = ((x << 5) + x + c.charCodeAt(0)) | 0; return 'h' + (x >>> 0).toString(36); };
+function parentView() {
+  document.documentElement.style.setProperty('--c', '#2b2340');
+  if (sessionStorage.getItem('el_parent_ok') === '1') return dashboard();
+  const pin = store.get('pin', null);
+  app.innerHTML = `<div class="hero"><div class="big-owl">🔐</div><h1>لوحة ولي الأمر</h1><p>${pin ? 'أدخل الرمز السري' : 'أول مرة: اختر رمزًا سريًا (4 أرقام أو أكثر)'}</p></div>
+    <div class="card" style="margin-top:16px"><input class="inp" id="pin" type="password" inputmode="numeric" placeholder="••••" style="text-align:center;letter-spacing:8px">
+    ${pin ? '' : '<input class="inp" id="pin2" type="password" inputmode="numeric" placeholder="أعد كتابة الرمز" style="text-align:center;letter-spacing:8px;margin-top:10px">'}
+    <button class="btn primary" id="ok" style="margin-top:12px">دخول</button></div>`;
+  const ok = () => {
+    const v = $('#pin').value.trim();
+    if (!pin) { if (v.length < 4 || v !== $('#pin2').value.trim()) return toast('الرمز قصير أو غير متطابق'); store.set('pin', hash(v)); }
+    else if (hash(v) !== pin) { sfx.bad(); return toast('الرمز غير صحيح'); }
+    sessionStorage.setItem('el_parent_ok', '1'); dashboard();
+  };
+  $('#ok').onclick = ok; $('#pin').onkeydown = e => e.key === 'Enter' && ok();
+}
+function baseUrl() { return store.get('baseUrl', '') || location.href.split('#')[0]; }
+function childLink(p) { return `${baseUrl()}#${p.id}${p.name ? '&n=' + encodeURIComponent(p.name) : ''}&g=${p.gender}`; }
+let ptab = null;
+function dashboard() {
+  const profs = getProfiles(), ids = Object.keys(profs);
+  if (!ptab || (!profs[ptab] && ptab !== 'settings')) ptab = ids[0];
+  const all = store.get('results', []);
+  app.innerHTML = `<div class="top"><h2 style="margin:0;flex:1">👨‍👩‍👧 لوحة ولي الأمر</h2><button class="x" id="lo" title="خروج">🔒</button></div>
+    <div class="sec"><h3>📥 لصق شفرة نتيجة</h3><textarea id="codes" placeholder="EL-..."></textarea><button class="sbtn" id="addc" style="margin-top:8px">إضافة النتائج</button></div>
+    <div class="ptabs">${ids.map(id => `<button class="ptab ${ptab === id ? 'on' : ''}" data-t="${id}">${profs[id].gender === 'f' ? '👧' : '👦'} ${esc(profs[id].name || id)}</button>`).join('')}<button class="ptab" data-t="+">➕</button><button class="ptab ${ptab === 'settings' ? 'on' : ''}" data-t="settings">⚙️ إعدادات</button></div>
+    <div id="pbody"></div>`;
+  $('#lo').onclick = () => { sessionStorage.removeItem('el_parent_ok'); parentView(); };
+  $('#addc').onclick = async () => {
+    const found = ($('#codes').value.match(/E[LZ]-[A-Za-z0-9_-]+/g) || []); const ok = [];
+    for (const c of found) { try { ok.push(await decodeResult(c)); } catch (e) { } }
+    if (!ok.length) return toast('ما لقيت شفرة صحيحة');
+    const profs2 = store.get('profiles', {});
+    ok.forEach(r => { const p = getProfiles()[r.c]; if (!p || !p.name) { profs2[r.c] = { ...(profs2[r.c] || {}), name: r.n, gender: r.g || 'm' }; store.set('profiles', profs2); } });
+    ptab = ok[0].c;
+    toast(`أُضيفت ${addResults(ok)} نتيجة ✅`); dashboard();
+  };
+  $$('.ptab').forEach(b => b.onclick = () => {
+    if (b.dataset.t === '+') { const p = store.get('profiles', {}); let k = ids.length + 1; while (profs['child' + k]) k++; p['child' + k] = { name: '', gender: 'm' }; store.set('profiles', p); ptab = 'child' + k; }
+    else ptab = b.dataset.t; dashboard();
+  });
+  const pb = $('#pbody');
+  if (ptab === 'settings') return settingsTab(pb, all);
+  const p = profs[ptab], rs = all.filter(x => x.c === p.id).sort((a, b) => a.d < b.d ? 1 : -1);
+  const doneSet = new Set(rs.map(x => x.l));
+  const mist = {}; rs.forEach(r => Object.entries(r.m || {}).forEach(([k, v]) => mist[k] = (mist[k] || 0) + v));
+  const topM = Object.entries(mist).sort((a, b) => b[1] - a[1]).slice(0, 12);
+  const avg = rs.length ? Math.round(rs.reduce((s, r) => s + r.p, 0) / rs.length) : 0;
+  const tt = rs.reduce((s, r) => s + r.t, 0);
+  pb.innerHTML = `
+    <div class="sec"><h3>👤 الملف</h3>
+      <div class="row"><input class="inp" id="pn" placeholder="الاسم" value="${esc(p.name || '')}" style="font-size:18px;padding:10px">
+      <select id="pg" class="inp" style="font-size:18px;padding:10px;flex:.6"><option value="m" ${p.gender !== 'f' ? 'selected' : ''}>ذكر</option><option value="f" ${p.gender === 'f' ? 'selected' : ''}>أنثى</option></select></div>
+      <input class="inp" id="pl" placeholder="العمر/المرحلة والمستوى (ملاحظة لك)" value="${esc(p.level || '')}" style="font-size:16px;padding:10px;margin-top:8px">
+      <button class="sbtn" id="ps" style="margin-top:8px">حفظ</button></div>
+    <div class="sec"><h3>🔗 رابط ${esc(p.name || p.id)}</h3><div class="code">${esc(childLink(p))}</div><div class="row"><button class="sbtn" id="cl">📋 نسخ الرابط</button><a class="sbtn" style="text-decoration:none;text-align:center;background:#25d366" target="_blank" href="https://wa.me/?text=${encodeURIComponent(T('درس الإنجليزي اليوم 🦉\n') + childLink(p))}">واتساب</a></div></div>
+    <div class="stats"><div class="stat"><b>${doneSet.size}</b><span>دروس منجزة</span></div><div class="stat"><b>${avg}%</b><span>متوسط الدرجة</span></div><div class="stat"><b>${Math.round(tt / 60)}</b><span>دقيقة تعلّم</span></div></div>
+    <div class="sec"><h3>🔁 الأخطاء المتكررة</h3>${topM.length ? `<div class="chips">${topM.map(([k, v]) => `<span class="chip">${esc(k)} ×${v}</span>`).join('')}</div>` : '<span class="muted">لا يوجد بعد</span>'}</div>
+    <div class="sec"><h3>📊 النتائج</h3>${rs.length ? `<table><tr><th>الدرس</th><th>التاريخ</th><th>الدرجة</th><th>الوقت</th><th>الأخطاء</th></tr>${rs.map(r => `<tr><td>${r.l}</td><td>${esc(r.d.replace('T', ' '))}</td><td>${r.p}%<br><span class="muted">${r.s}/${r.x}</span></td><td>${Math.floor(r.t / 60)}:${String(r.t % 60).padStart(2, '0')}</td><td class="en" style="font-size:13px">${Object.keys(r.m || {}).map(esc).join(', ') || '—'}</td></tr>`).join('')}</table>` : '<span class="muted">لا توجد نتائج بعد. الصق الشفرة التي يرسلها لك.</span>'}</div>
+    <div class="sec"><h3>🗺️ خطة الدروس</h3><ol class="plan">${PLAN.map((t, i) => { const n = i + 1, avail = LESSONS.some(L => L.no === n); return `<li class="${doneSet.has(n) ? 'done' : avail ? 'avail' : ''}">${doneSet.has(n) ? '✅' : avail ? '🟣' : '⏳'} ${esc(t)}</li>`; }).join('')}</ol><div class="muted" style="font-size:14px">✅ منجز · 🟣 متاح · ⏳ قادم</div></div>`;
+  $('#ps').onclick = () => { const s = store.get('profiles', {}); s[p.id] = { ...(s[p.id] || {}), name: $('#pn').value.trim(), gender: $('#pg').value, level: $('#pl').value.trim() }; store.set('profiles', s); toast('تم الحفظ ✅'); dashboard(); };
+  $('#cl').onclick = () => copy(childLink(p));
+}
+function settingsTab(pb, all) {
+  pb.innerHTML = `
+    <div class="sec"><h3>🌐 رابط الموقع المنشور</h3><p class="muted" style="margin:0 0 8px">إذا رفعت الصفحة على الإنترنت، الصق رابطها هنا لتصير روابط الأبناء صحيحة.</p><input class="inp en" id="bu" value="${esc(store.get('baseUrl', ''))}" placeholder="https://..." style="font-size:16px;padding:10px"><button class="sbtn" id="bus" style="margin-top:8px">حفظ</button></div>
+    <div class="sec"><h3>💾 النتائج (${all.length})</h3><p class="muted" style="margin:0 0 8px">صدّر النتائج واحفظ الملف في مجلد <span class="en">results</span> داخل مجلد المشروع، حتى أقرأها كل صباح وأبني الدرس التالي على أخطائهم.</p>
+      <div class="row"><button class="sbtn" id="ex">⬇️ تنزيل ملف النتائج</button><button class="sbtn ghost" id="cx">📋 نسخ كنص</button></div>
+      <textarea id="imp" placeholder="الصق JSON للاستيراد" style="margin-top:10px"></textarea><button class="sbtn ghost" id="im" style="margin-top:8px">استيراد</button></div>
+    <div class="sec"><h3>🔐 تغيير الرمز السري</h3><button class="sbtn ghost" id="rp">إعادة تعيين الرمز</button></div>`;
+  $('#bus').onclick = () => { store.set('baseUrl', $('#bu').value.trim()); toast('تم الحفظ ✅'); };
+  const json = () => JSON.stringify({ exported: new Date().toISOString(), profiles: getProfiles(), results: all }, null, 1);
+  $('#ex').onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([json()], { type: 'application/json' })); a.download = 'english-results.json'; a.click(); };
+  $('#cx').onclick = () => copy(json());
+  $('#im').onclick = () => { try { const o = JSON.parse($('#imp').value); toast(`أُضيفت ${addResults(o.results || o)} نتيجة ✅`); dashboard(); } catch (e) { toast('النص غير صالح'); } };
+  $('#rp').onclick = () => { if (confirm('إعادة تعيين الرمز السري؟')) { store.set('pin', null); sessionStorage.removeItem('el_parent_ok'); parentView(); } };
+}
+
+/* =========================================================
+   التوجيه
+   ========================================================= */
+function route() {
+  const r = parseHash();
+  if (r.parent) return parentView();
+  resolveChild(r);
+  if (!me) return setupView(r);
+  const L = (r.lesson && LESSONS.find(x => x.no === r.lesson)) || latest();
+  if (r.lessons) return lessonsList();
+  home(L);
+}
+window.addEventListener('hashchange', route);
+route();
+
+/* أداة اختبار آلي: window.__auto() تجيب السؤال الحالي أو تضغط التالي */
+window.__auto = () => {
+  const nb = $('.nextbtn');
+  if (nb && (!cur || cur.done)) { nb.click(); return 'next'; }
+  if (cur && !cur.done && cur.auto) { cur.auto(); return 'answer'; }
+  if (!cur && !run) { const s = $('#start'); if (s) { s.click(); return 'start'; } }
+  return 'none';
+};
+window.__state = () => ({ i: run && run.i, total: run && run.qs.length, type: cur && cur.st.type, score: run && run.score, max: run && run.max, finished: !!window.__lastResult });
+</script>
+</body>
+</html>

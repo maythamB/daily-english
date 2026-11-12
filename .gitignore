@@ -1,0 +1,5 @@
+# Only the public page is published. Results, project notes, and tools stay private on the device.
+/*
+!/index.html
+!/.gitignore
+!/.nojekyll
